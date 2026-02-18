@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fitness & Nutrition Tracker</title>
+    <meta name="theme-color" content="#0f8a6f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="FitTracker" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icons/icon-192.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-1" aria-hidden="true"></div>
+    <div class="bg-orb orb-2" aria-hidden="true"></div>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Daily Nutrition</p>
+          <h1>Fitness & Nutrition Tracker</h1>
+          <p class="subhead">Track food, steps, protein, and weight in one place.</p>
+        </div>
+        <section class="install-card">
+          <button id="install-btn" type="button" class="secondary" disabled>Install App</button>
+          <small id="install-help">Install prompt appears when your browser allows it.</small>
+        </section>
+      </header>
+
+      <section id="dashboard" class="card hero-card">
+        <h2>Today Dashboard</h2>
+        <div class="summary" id="summary"></div>
+      </section>
+
+      <div class="layout-grid">
+        <section id="log" class="card">
+          <h2>Add Food / Drink / Snack</h2>
+          <form id="entry-form" class="grid">
+            <label>
+              Date
+              <input id="entry-date" type="date" required />
+            </label>
+            <label>
+              Type
+              <select id="entry-type">
+                <option value="Food">Food</option>
+                <option value="Drink">Drink</option>
+                <option value="Snack">Snack</option>
+              </select>
+            </label>
+            <label>
+              Name
+              <input
+                id="entry-name"
+                type="text"
+                placeholder="Chicken rice bowl"
+                list="food-suggestions"
+                autocomplete="off"
+                required
+              />
+              <datalist id="food-suggestions"></datalist>
+            </label>
+            <label>
+              Calories
+              <input id="entry-calories" type="number" min="0" required />
+            </label>
+            <label>
+              Protein (g)
+              <input id="entry-protein" type="number" min="0" step="0.1" required />
+            </label>
+            <label>
+              Carbs (g)
+              <input id="entry-carbs" type="number" min="0" step="0.1" />
+            </label>
+            <label>
+              Fat (g)
+              <input id="entry-fat" type="number" min="0" step="0.1" />
+            </label>
+            <div class="actions">
+              <button id="entry-submit" type="submit">Add Entry</button>
+              <button id="entry-lookup" type="button" class="secondary">Lookup (Live)</button>
+              <button id="entry-cancel" type="button" class="secondary hidden">Cancel Edit</button>
+            </div>
+          </form>
+          <small id="food-match-status" class="muted">Tap Lookup (Live) for online nutrition data.</small>
+        </section>
+
+        <section class="card">
+          <h2>Today Entries</h2>
+          <ul id="entries-list" class="list"></ul>
+        </section>
+
+        <section class="card">
+          <h2>Steps + Weight Check-in</h2>
+          <form id="checkin-form" class="grid">
+            <label>
+              Date
+              <input id="checkin-date" type="date" required />
+            </label>
+            <label>
+              Steps
+              <input id="checkin-steps" type="number" min="0" required />
+            </label>
+            <label>
+              Weight (lb)
+              <input id="checkin-weight" type="number" min="0" step="0.1" required />
+            </label>
+            <button type="submit">Save Check-in</button>
+          </form>
+        </section>
+      </div>
+
+      <div id="insights" class="layout-grid two-col">
+        <section class="card">
+          <h2>Weekly Report</h2>
+          <div id="weekly-report" class="summary"></div>
+        </section>
+
+        <section class="card">
+          <h2>Trend Charts (14 Days)</h2>
+          <div class="charts">
+            <article class="chart-card">
+              <h3>Calories</h3>
+              <div id="chart-calories"></div>
+            </article>
+            <article class="chart-card">
+              <h3>Protein (g)</h3>
+              <div id="chart-protein"></div>
+            </article>
+            <article class="chart-card">
+              <h3>Weight (lb)</h3>
+              <div id="chart-weight"></div>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <div id="goals" class="layout-grid two-col">
+        <section class="card">
+          <h2>Body Profile + Auto Targets</h2>
+          <form id="profile-form" class="grid">
+            <label>
+              Sex
+              <select id="profile-sex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </label>
+            <label>
+              Age
+              <input id="profile-age" type="number" min="12" max="100" required />
+            </label>
+            <label>
+              Height (ft)
+              <input id="profile-height-ft" type="number" min="3" max="8" required />
+            </label>
+            <label>
+              Height (in)
+              <input id="profile-height-in" type="number" min="0" max="11" required />
+            </label>
+            <label>
+              Current Weight (lb)
+              <input id="profile-weight-lb" type="number" min="60" max="600" step="0.1" required />
+            </label>
+            <label>
+              Activity
+              <select id="profile-activity">
+                <option value="1.2">Sedentary</option>
+                <option value="1.375">Lightly Active</option>
+                <option value="1.55">Moderately Active</option>
+                <option value="1.725">Very Active</option>
+              </select>
+            </label>
+            <label>
+              Bulk Surplus (kcal)
+              <input id="profile-surplus" type="number" min="100" max="800" step="10" required />
+            </label>
+            <div class="actions">
+              <button id="calc-targets" type="submit">Calculate Targets</button>
+              <button id="apply-targets" type="button" class="secondary">Apply To Goals</button>
+            </div>
+          </form>
+          <div id="target-output" class="target-box muted">Enter your stats and calculate targets.</div>
+        </section>
+
+        <section class="card">
+          <h2>Goals</h2>
+          <form id="goals-form" class="grid">
+            <label>
+              Daily Calories
+              <input id="goal-calories" type="number" min="0" required />
+            </label>
+            <label>
+              Daily Protein (g)
+              <input id="goal-protein" type="number" min="0" required />
+            </label>
+            <label>
+              Daily Steps
+              <input id="goal-steps" type="number" min="0" required />
+            </label>
+            <label>
+              Start Weight (lb)
+              <input id="start-weight" type="number" min="0" step="0.1" required />
+            </label>
+            <button type="submit">Save Goals</button>
+          </form>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>Recent Daily Totals</h2>
+        <div id="history"></div>
+      </section>
+
+      <section class="card">
+        <h2>Cross-Device Sync</h2>
+        <p class="muted">Use Supabase to sync data between devices.</p>
+        <form id="sync-form" class="grid">
+          <label>
+            Supabase Project URL
+            <input id="sync-url" type="url" placeholder="https://your-project.supabase.co" />
+          </label>
+          <label>
+            Supabase Anon Key
+            <input id="sync-key" type="password" placeholder="eyJhbGciOi..." />
+          </label>
+          <label>
+            Sync ID (same on all your devices)
+            <input id="sync-id" type="text" placeholder="noah-fitness-main" />
+          </label>
+          <label>
+            Auto Sync
+            <select id="sync-auto">
+              <option value="true">On</option>
+              <option value="false">Off</option>
+            </select>
+          </label>
+          <div class="actions">
+            <button id="sync-save" type="submit">Save Sync Setup</button>
+            <button id="sync-push" type="button" class="secondary">Push Now</button>
+            <button id="sync-pull" type="button" class="secondary">Pull Now</button>
+          </div>
+        </form>
+        <small id="sync-status" class="muted">Configure Supabase to enable sync.</small>
+      </section>
+    </main>
+
+    <nav class="mobile-nav" aria-label="App Sections">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#log">Log</a>
+      <a href="#insights">Insights</a>
+      <a href="#goals">Goals</a>
+    </nav>
+
+    <script src="app.js?v=7"></script>
+  </body>
+</html>
